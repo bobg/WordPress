@@ -468,3 +468,11 @@ div.leftcallout {
 /* 	margin-left: auto; */
 /* 	margin-right: auto; */
 /* } */
+
+/* try to override other blockquote settings */
+
+blockquote {
+    border: none;
+    font-size: inherit;
+    padding-left: 2rem;
+}
