@@ -110,9 +110,9 @@ i {
 }
 
 blockquote {
-	border-left: 4px solid #1a1a1a;
+	/* border-left: 4px solid #1a1a1a; */
 	color: #686868;
-	font-size: 19px;
+	/* font-size: 19px; */
 	font-style: italic;
 	line-height: 1.4736842105;
 	margin-bottom: 28px;
@@ -120,13 +120,13 @@ blockquote {
 	padding: 0 0 0 24px;
 }
 
-blockquote:not(.alignleft):not(.alignright) {
-	margin-left: -28px;
-}
+/* blockquote:not(.alignleft):not(.alignright) { */
+/* 	margin-left: -28px; */
+/* } */
 
-blockquote blockquote:not(.alignleft):not(.alignright) {
-	margin-left: 0;
-}
+/* blockquote blockquote:not(.alignleft):not(.alignright) { */
+/* 	margin-left: 0; */
+/* } */
 
 blockquote:before,
 blockquote:after {
@@ -160,14 +160,14 @@ blockquote b {
 	font-weight: 400;
 }
 
-blockquote.alignleft,
-blockquote.alignright {
-	border: 0 solid #1a1a1a;
-	border-top-width: 4px;
-	padding: 18px 0 0;
-	width: -webkit-calc(50% - 14px);
-	width: calc(50% - 14px);
-}
+/* blockquote.alignleft, */
+/* blockquote.alignright { */
+/* 	border: 0 solid #1a1a1a; */
+/* 	border-top-width: 4px; */
+/* 	padding: 18px 0 0; */
+/* 	width: -webkit-calc(50% - 14px); */
+/* 	width: calc(50% - 14px); */
+/* } */
 
 address {
 	font-style: italic;
@@ -507,26 +507,26 @@ fieldset {
  * 8.0 - RTL
  */
 
-.rtl blockquote {
-	border: 0 solid #1a1a1a;
-	border-right-width: 4px;
-}
+/* .rtl blockquote { */
+/* 	border: 0 solid #1a1a1a; */
+/* 	border-right-width: 4px; */
+/* } */
 
-.rtl blockquote.alignleft,
-.rtl blockquote.alignright {
-	border: 0 solid #1a1a1a;
-	border-top-width: 4px;
-}
+/* .rtl blockquote.alignleft, */
+/* .rtl blockquote.alignright { */
+/* 	border: 0 solid #1a1a1a; */
+/* 	border-top-width: 4px; */
+/* } */
 
-.rtl blockquote:not(.alignleft):not(.alignright) {
-	margin-right: -28px;
-	padding: 0 24px 0 0;
-}
+/* .rtl blockquote:not(.alignleft):not(.alignright) { */
+/* 	margin-right: -28px; */
+/* 	padding: 0 24px 0 0; */
+/* } */
 
-.rtl blockquote blockquote:not(.alignleft):not(.alignright) {
-	margin-right: 0;
-	margin-left: auto;
-}
+/* .rtl blockquote blockquote:not(.alignleft):not(.alignright) { */
+/* 	margin-right: 0; */
+/* 	margin-left: auto; */
+/* } */
 
 .rtl li > ul,
 .rtl blockquote > ul {
