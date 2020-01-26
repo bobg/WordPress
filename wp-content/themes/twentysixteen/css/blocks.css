@@ -476,3 +476,12 @@ blockquote {
     font-size: inherit;
     padding-left: 2rem;
 }
+
+.footnote-link {
+    font-size: small;
+    vertical-align: super;
+}
+
+ol.footnotes li {
+    padding-left: 1rem;
+}
