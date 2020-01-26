@@ -432,10 +432,10 @@ Description: Used to style blocks in the editor.
 	margin-left: 0;
 }
 
-.wp-block-freeform.block-library-rich-text__tinymce blockquote p {
-	font-size: 19px;
-	font-size: 1.1875rem;
-}
+/* .wp-block-freeform.block-library-rich-text__tinymce blockquote p { */
+/* 	font-size: 19px; */
+/* 	font-size: 1.1875rem; */
+/* } */
 
 .wp-block-freeform.block-library-rich-text__tinymce blockquote cite {
 	color: #1a1a1a;
@@ -465,7 +465,7 @@ Description: Used to style blocks in the editor.
 @media screen and (min-width: 44.375em) {
 	.wp-block-freeform.block-library-rich-text__tinymce blockquote.alignleft,
 	.wp-block-freeform.block-library-rich-text__tinymce blockquote.alignright {
-		border-width: 4px 0 0 0;
+		/* border-width: 4px 0 0 0; */
 		padding: 0.9473684211em 0 0;
 		width: -webkit-calc(50% - 0.736842105em);
 		width: calc(50% - 0.736842105em);
@@ -473,8 +473,8 @@ Description: Used to style blocks in the editor.
 }
 
 .rtl .wp-block-freeform.block-library-rich-text__tinymce blockquote {
-	border-left-width: 0;
-	border-right-width: 4px;
+	/* border-left-width: 0; */
+	/* border-right-width: 4px; */
 	overflow: hidden;
 	padding-left: 0;
 	padding-right: 1.263157895em;
