@@ -22,7 +22,7 @@
  *                           to be used across groups. Default empty.
  * @param int        $expire Optional. When the cache data should expire, in seconds.
  *                           Default 0 (no expiration).
- * @return bool False if cache key and group already exist, true on success.
+ * @return bool True on success, false if cache key and group already exist.
  */
 function wp_cache_add( $key, $data, $group = '', $expire = 0 ) {
 	global $wp_object_cache;
@@ -58,7 +58,7 @@ function wp_cache_close() {
  * @param int|string $key    The cache key to decrement.
  * @param int        $offset Optional. The amount by which to decrement the item's value. Default 1.
  * @param string     $group  Optional. The group the key is in. Default empty.
- * @return false|int False on failure, the item's new value on success.
+ * @return int|false The item's new value on success, false on failure.
  */
 function wp_cache_decr( $key, $offset = 1, $group = '' ) {
 	global $wp_object_cache;
@@ -92,7 +92,7 @@ function wp_cache_delete( $key, $group = '' ) {
  * @see WP_Object_Cache::flush()
  * @global WP_Object_Cache $wp_object_cache Object cache global instance.
  *
- * @return bool False on failure, true on success
+ * @return bool True on success, false on failure.
  */
 function wp_cache_flush() {
 	global $wp_object_cache;
@@ -134,7 +134,7 @@ function wp_cache_get( $key, $group = '', $force = false, &$found = null ) {
  * @param int|string $key    The key for the cache contents that should be incremented.
  * @param int        $offset Optional. The amount by which to increment the item's value. Default 1.
  * @param string     $group  Optional. The group the key is in. Default empty.
- * @return false|int False on failure, the item's new value on success.
+ * @return int|false The item's new value on success, false on failure.
  */
 function wp_cache_incr( $key, $offset = 1, $group = '' ) {
 	global $wp_object_cache;
@@ -191,7 +191,7 @@ function wp_cache_replace( $key, $data, $group = '', $expire = 0 ) {
  *                           to be used across groups. Default empty.
  * @param int        $expire Optional. When to expire the cache contents, in seconds.
  *                           Default 0 (no expiration).
- * @return bool False on failure, true on success
+ * @return bool True on success, false on failure.
  */
 function wp_cache_set( $key, $data, $group = '', $expire = 0 ) {
 	global $wp_object_cache;
@@ -323,7 +323,7 @@ class WP_Object_Cache {
 	 * The blog prefix to prepend to keys in non-global groups.
 	 *
 	 * @since 3.5.0
-	 * @var int
+	 * @var string
 	 */
 	private $blog_prefix;
 
@@ -334,6 +334,16 @@ class WP_Object_Cache {
 	 * @var bool
 	 */
 	private $multisite;
+
+	/**
+	 * Sets up object properties; PHP 5 style constructor.
+	 *
+	 * @since 2.0.8
+	 */
+	public function __construct() {
+		$this->multisite   = is_multisite();
+		$this->blog_prefix = $this->multisite ? get_current_blog_id() . ':' : '';
+	}
 
 	/**
 	 * Makes private properties readable for backward compatibility.
@@ -396,7 +406,7 @@ class WP_Object_Cache {
 	 * @param mixed      $data   The contents to store in the cache.
 	 * @param string     $group  Optional. Where to group the cache contents. Default 'default'.
 	 * @param int        $expire Optional. When to expire the cache contents. Default 0 (no expiration).
-	 * @return bool False if cache key and group already exist, true on success
+	 * @return bool True on success, false if cache key and group already exist.
 	 */
 	public function add( $key, $data, $group = 'default', $expire = 0 ) {
 		if ( wp_suspend_cache_addition() ) {
@@ -441,7 +451,7 @@ class WP_Object_Cache {
 	 * @param int|string $key    The cache key to decrement.
 	 * @param int        $offset Optional. The amount by which to decrement the item's value. Default 1.
 	 * @param string     $group  Optional. The group the key is in. Default 'default'.
-	 * @return false|int False on failure, the item's new value on success.
+	 * @return int|false The item's new value on success, false on failure.
 	 */
 	public function decr( $key, $offset = 1, $group = 'default' ) {
 		if ( empty( $group ) ) {
@@ -526,11 +536,11 @@ class WP_Object_Cache {
 	 *
 	 * @param int|string $key    What the contents in the cache are called.
 	 * @param string     $group  Optional. Where the cache contents are grouped. Default 'default'.
-	 * @param string     $force  Optional. Unused. Whether to force a refetch rather than relying on the local
+	 * @param bool       $force  Optional. Unused. Whether to force a refetch rather than relying on the local
 	 *                           cache. Default false.
-	 * @param bool        $found  Optional. Whether the key was found in the cache (passed by reference).
-	 *                            Disambiguates a return of false, a storable value. Default null.
-	 * @return false|mixed False on failure to retrieve contents or the cache contents on success.
+	 * @param bool       $found  Optional. Whether the key was found in the cache (passed by reference).
+	 *                           Disambiguates a return of false, a storable value. Default null.
+	 * @return mixed|false The cache contents on success, false on failure to retrieve contents.
 	 */
 	public function get( $key, $group = 'default', $force = false, &$found = null ) {
 		if ( empty( $group ) ) {
@@ -564,7 +574,7 @@ class WP_Object_Cache {
 	 * @param int|string $key    The cache key to increment
 	 * @param int        $offset Optional. The amount by which to increment the item's value. Default 1.
 	 * @param string     $group  Optional. The group the key is in. Default 'default'.
-	 * @return false|int False on failure, the item's new value on success.
+	 * @return int|false The item's new value on success, false on failure.
 	 */
 	public function incr( $key, $offset = 1, $group = 'default' ) {
 		if ( empty( $group ) ) {
@@ -646,7 +656,7 @@ class WP_Object_Cache {
 	/**
 	 * Sets the data contents into the cache.
 	 *
-	 * The cache contents is grouped by the $group parameter followed by the
+	 * The cache contents are grouped by the $group parameter followed by the
 	 * $key. This allows for duplicate ids in unique groups. Therefore, naming of
 	 * the group should be used with care and should follow normal function
 	 * naming guidelines outside of core WordPress usage.
@@ -725,34 +735,5 @@ class WP_Object_Cache {
 	 */
 	protected function _exists( $key, $group ) {
 		return isset( $this->cache[ $group ] ) && ( isset( $this->cache[ $group ][ $key ] ) || array_key_exists( $key, $this->cache[ $group ] ) );
-	}
-
-	/**
-	 * Sets up object properties; PHP 5 style constructor.
-	 *
-	 * @since 2.0.8
-	 */
-	public function __construct() {
-		$this->multisite   = is_multisite();
-		$this->blog_prefix = $this->multisite ? get_current_blog_id() . ':' : '';
-
-		/**
-		 * @todo This should be moved to the PHP4 style constructor, PHP5
-		 * already calls __destruct()
-		 */
-		register_shutdown_function( array( $this, '__destruct' ) );
-	}
-
-	/**
-	 * Saves the object cache before object is completely destroyed.
-	 *
-	 * Called upon object destruction, which should be when PHP ends.
-	 *
-	 * @since 2.0.8
-	 *
-	 * @return true Always returns true.
-	 */
-	public function __destruct() {
-		return true;
 	}
 }

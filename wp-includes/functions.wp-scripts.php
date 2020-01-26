@@ -59,13 +59,13 @@ function _wp_scripts_maybe_doing_it_wrong( $function ) {
  * Makes use of already-instantiated $wp_scripts global if present. Use provided {@see 'wp_print_scripts'}
  * hook to register/enqueue new scripts.
  *
- * @see WP_Scripts::do_items()
+ * @see WP_Scripts::do_item()
  * @global WP_Scripts $wp_scripts The WP_Scripts object for printing scripts.
  *
  * @since 2.1.0
  *
  * @param string|bool|array $handles Optional. Scripts to be printed. Default 'false'.
- * @return array On success, a processed array of WP_Dependencies items; otherwise, an empty array.
+ * @return string[] On success, an array of handles of processed WP_Dependencies items; otherwise, an empty array.
  */
 function wp_print_scripts( $handles = false ) {
 	/**
@@ -142,7 +142,7 @@ function wp_add_inline_script( $handle, $data, $position = 'after' ) {
  * @param string           $handle    Name of the script. Should be unique.
  * @param string|bool      $src       Full URL of the script, or path of the script relative to the WordPress root directory.
  *                                    If source is set to false, script is an alias of other scripts it depends on.
- * @param array            $deps      Optional. An array of registered script handles this script depends on. Default empty array.
+ * @param string[]         $deps      Optional. An array of registered script handles this script depends on. Default empty array.
  * @param string|bool|null $ver       Optional. String specifying script version number, if it has one, which is added to the URL
  *                                    as a query string for cache busting purposes. If version is set to false, a version
  *                                    number is automatically added equal to current installed WordPress version.
@@ -176,7 +176,7 @@ function wp_register_script( $handle, $src, $deps = array(), $ver = false, $in_f
  *         ...
  *     }
  *
- * @see WP_Dependencies::localize()
+ * @see WP_Scripts::localize()
  * @link https://core.trac.wordpress.org/ticket/11520
  * @global WP_Scripts $wp_scripts The WP_Scripts object for printing scripts.
  *
@@ -209,14 +209,14 @@ function wp_localize_script( $handle, $object_name, $l10n ) {
  * @global WP_Scripts $wp_scripts The WP_Scripts object for printing scripts.
  *
  * @since 5.0.0
+ * @since 5.1.0 The `$domain` parameter was made optional.
  *
  * @param string $handle Script handle the textdomain will be attached to.
- * @param string $domain The textdomain.
+ * @param string $domain Optional. Text domain. Default 'default'.
  * @param string $path   Optional. The full file path to the directory containing translation files.
- *
- * @return bool True if the textdomain was successfully localized, false otherwise.
+ * @return bool True if the text domain was successfully localized, false otherwise.
  */
-function wp_set_script_translations( $handle, $domain, $path = null ) {
+function wp_set_script_translations( $handle, $domain = 'default', $path = null ) {
 	global $wp_scripts;
 	if ( ! ( $wp_scripts instanceof WP_Scripts ) ) {
 		_wp_scripts_maybe_doing_it_wrong( __FUNCTION__ );
@@ -279,7 +279,7 @@ function wp_deregister_script( $handle ) {
 
 		if ( in_array( $handle, $no ) ) {
 			$message = sprintf(
-				/* translators: 1: script name, 2: wp_enqueue_scripts */
+				/* translators: 1: Script name, 2: wp_enqueue_scripts */
 				__( 'Do not deregister the %1$s script in the administration area. To target the front-end theme, use the %2$s hook.' ),
 				"<code>$handle</code>",
 				'<code>wp_enqueue_scripts</code>'
@@ -306,7 +306,7 @@ function wp_deregister_script( $handle ) {
  * @param string           $handle    Name of the script. Should be unique.
  * @param string           $src       Full URL of the script, or path of the script relative to the WordPress root directory.
  *                                    Default empty.
- * @param array            $deps      Optional. An array of registered script handles this script depends on. Default empty array.
+ * @param string[]         $deps      Optional. An array of registered script handles this script depends on. Default empty array.
  * @param string|bool|null $ver       Optional. String specifying script version number, if it has one, which is added to the URL
  *                                    as a query string for cache busting purposes. If version is set to false, a version
  *                                    number is automatically added equal to current installed WordPress version.

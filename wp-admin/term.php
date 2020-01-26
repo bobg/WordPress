@@ -15,7 +15,12 @@ if ( empty( $_REQUEST['tag_ID'] ) ) {
 	if ( ! empty( $taxnow ) ) {
 		$sendback = add_query_arg( array( 'taxonomy' => $taxnow ), $sendback );
 	}
-	wp_redirect( esc_url( $sendback ) );
+
+	if ( 'post' !== get_current_screen()->post_type ) {
+		$sendback = add_query_arg( 'post_type', get_current_screen()->post_type, $sendback );
+	}
+
+	wp_redirect( esc_url_raw( $sendback ) );
 	exit;
 }
 
@@ -47,10 +52,10 @@ if ( empty( $post_type ) ) {
 	$post_type = reset( $tax->object_type );
 }
 
-if ( 'post' != $post_type ) {
-	$parent_file  = ( 'attachment' == $post_type ) ? 'upload.php' : "edit.php?post_type=$post_type";
+if ( 'post' !== $post_type ) {
+	$parent_file  = ( 'attachment' === $post_type ) ? 'upload.php' : "edit.php?post_type=$post_type";
 	$submenu_file = "edit-tags.php?taxonomy=$taxonomy&amp;post_type=$post_type";
-} elseif ( 'link_category' == $taxonomy ) {
+} elseif ( 'link_category' === $taxonomy ) {
 	$parent_file  = 'link-manager.php';
 	$submenu_file = 'edit-tags.php?taxonomy=link_category';
 } else {

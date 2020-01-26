@@ -82,7 +82,7 @@ this["wp"] = this["wp"] || {}; this["wp"]["apiFetch"] =
 /******/
 /******/
 /******/ 	// Load entry module and return exports
-/******/ 	return __webpack_require__(__webpack_require__.s = 316);
+/******/ 	return __webpack_require__(__webpack_require__.s = 376);
 /******/ })
 /************************************************************************/
 /******/ ({
@@ -94,54 +94,16 @@ this["wp"] = this["wp"] || {}; this["wp"]["apiFetch"] =
 
 /***/ }),
 
-/***/ 15:
+/***/ 20:
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
-/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "a", function() { return _defineProperty; });
-function _defineProperty(obj, key, value) {
-  if (key in obj) {
-    Object.defineProperty(obj, key, {
-      value: value,
-      enumerable: true,
-      configurable: true,
-      writable: true
-    });
-  } else {
-    obj[key] = value;
-  }
-
-  return obj;
-}
-
-/***/ }),
-
-/***/ 21:
-/***/ (function(module, __webpack_exports__, __webpack_require__) {
-
-"use strict";
-
-// CONCATENATED MODULE: ./node_modules/@babel/runtime/helpers/esm/objectWithoutPropertiesLoose.js
-function _objectWithoutPropertiesLoose(source, excluded) {
-  if (source == null) return {};
-  var target = {};
-  var sourceKeys = Object.keys(source);
-  var key, i;
-
-  for (i = 0; i < sourceKeys.length; i++) {
-    key = sourceKeys[i];
-    if (excluded.indexOf(key) >= 0) continue;
-    target[key] = source[key];
-  }
-
-  return target;
-}
-// CONCATENATED MODULE: ./node_modules/@babel/runtime/helpers/esm/objectWithoutProperties.js
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "a", function() { return _objectWithoutProperties; });
+/* harmony import */ var _objectWithoutPropertiesLoose__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(40);
 
 function _objectWithoutProperties(source, excluded) {
   if (source == null) return {};
-  var target = _objectWithoutPropertiesLoose(source, excluded);
+  var target = Object(_objectWithoutPropertiesLoose__WEBPACK_IMPORTED_MODULE_0__[/* default */ "a"])(source, excluded);
   var key, i;
 
   if (Object.getOwnPropertySymbols) {
@@ -163,86 +125,59 @@ function _objectWithoutProperties(source, excluded) {
 /***/ 23:
 /***/ (function(module, exports) {
 
-(function() { module.exports = this["wp"]["hooks"]; }());
+(function() { module.exports = this["regeneratorRuntime"]; }());
 
 /***/ }),
 
-/***/ 24:
+/***/ 25:
 /***/ (function(module, exports) {
 
 (function() { module.exports = this["wp"]["url"]; }());
 
 /***/ }),
 
-/***/ 316:
+/***/ 376:
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
 __webpack_require__.r(__webpack_exports__);
 
 // EXTERNAL MODULE: ./node_modules/@babel/runtime/helpers/esm/objectSpread.js
-var objectSpread = __webpack_require__(8);
+var objectSpread = __webpack_require__(6);
 
-// EXTERNAL MODULE: ./node_modules/@babel/runtime/helpers/esm/objectWithoutProperties.js + 1 modules
-var objectWithoutProperties = __webpack_require__(21);
+// EXTERNAL MODULE: ./node_modules/@babel/runtime/helpers/esm/objectWithoutProperties.js
+var objectWithoutProperties = __webpack_require__(20);
 
 // EXTERNAL MODULE: external {"this":["wp","i18n"]}
 var external_this_wp_i18n_ = __webpack_require__(1);
 
-// EXTERNAL MODULE: external {"this":["wp","hooks"]}
-var external_this_wp_hooks_ = __webpack_require__(23);
-
 // CONCATENATED MODULE: ./node_modules/@wordpress/api-fetch/build-module/middlewares/nonce.js
 
 
-/**
- * External dependencies
- */
-
-
-var nonce_createNonceMiddleware = function createNonceMiddleware(nonce) {
-  var usedNonce = nonce;
-  /**
-   * This is not ideal but it's fine for now.
-   *
-   * Configure heartbeat to refresh the wp-api nonce, keeping the editor
-   * authorization intact.
-   */
-
-  Object(external_this_wp_hooks_["addAction"])('heartbeat.tick', 'core/api-fetch/create-nonce-middleware', function (response) {
-    if (response['rest-nonce']) {
-      usedNonce = response['rest-nonce'];
-    }
-  });
-  return function (options, next) {
-    var headers = options.headers || {}; // If an 'X-WP-Nonce' header (or any case-insensitive variation
+function createNonceMiddleware(nonce) {
+  function middleware(options, next) {
+    var _options$headers = options.headers,
+        headers = _options$headers === void 0 ? {} : _options$headers; // If an 'X-WP-Nonce' header (or any case-insensitive variation
     // thereof) was specified, no need to add a nonce header.
 
-    var addNonceHeader = true;
-
     for (var headerName in headers) {
-      if (headers.hasOwnProperty(headerName)) {
-        if (headerName.toLowerCase() === 'x-wp-nonce') {
-          addNonceHeader = false;
-          break;
-        }
+      if (headerName.toLowerCase() === 'x-wp-nonce') {
+        return next(options);
       }
     }
 
-    if (addNonceHeader) {
-      // Do not mutate the original headers object, if any.
-      headers = Object(objectSpread["a" /* default */])({}, headers, {
-        'X-WP-Nonce': usedNonce
-      });
-    }
-
     return next(Object(objectSpread["a" /* default */])({}, options, {
-      headers: headers
+      headers: Object(objectSpread["a" /* default */])({}, headers, {
+        'X-WP-Nonce': middleware.nonce
+      })
     }));
-  };
-};
+  }
 
-/* harmony default export */ var middlewares_nonce = (nonce_createNonceMiddleware);
+  middleware.nonce = nonce;
+  return middleware;
+}
+
+/* harmony default export */ var middlewares_nonce = (createNonceMiddleware);
 
 // CONCATENATED MODULE: ./node_modules/@wordpress/api-fetch/build-module/middlewares/namespace-endpoint.js
 
@@ -313,32 +248,45 @@ var root_url_createRootURLMiddleware = function createRootURLMiddleware(rootURL)
 /* harmony default export */ var root_url = (root_url_createRootURLMiddleware);
 
 // CONCATENATED MODULE: ./node_modules/@wordpress/api-fetch/build-module/middlewares/preloading.js
-var createPreloadingMiddleware = function createPreloadingMiddleware(preloadedData) {
+/**
+ * Given a path, returns a normalized path where equal query parameter values
+ * will be treated as identical, regardless of order they appear in the original
+ * text.
+ *
+ * @param {string} path Original path.
+ *
+ * @return {string} Normalized path.
+ */
+function getStablePath(path) {
+  var splitted = path.split('?');
+  var query = splitted[1];
+  var base = splitted[0];
+
+  if (!query) {
+    return base;
+  } // 'b=1&c=2&a=5'
+
+
+  return base + '?' + query // [ 'b=1', 'c=2', 'a=5' ]
+  .split('&') // [ [ 'b, '1' ], [ 'c', '2' ], [ 'a', '5' ] ]
+  .map(function (entry) {
+    return entry.split('=');
+  }) // [ [ 'a', '5' ], [ 'b, '1' ], [ 'c', '2' ] ]
+  .sort(function (a, b) {
+    return a[0].localeCompare(b[0]);
+  }) // [ 'a=5', 'b=1', 'c=2' ]
+  .map(function (pair) {
+    return pair.join('=');
+  }) // 'a=5&b=1&c=2'
+  .join('&');
+}
+
+function createPreloadingMiddleware(preloadedData) {
+  var cache = Object.keys(preloadedData).reduce(function (result, path) {
+    result[getStablePath(path)] = preloadedData[path];
+    return result;
+  }, {});
   return function (options, next) {
-    function getStablePath(path) {
-      var splitted = path.split('?');
-      var query = splitted[1];
-      var base = splitted[0];
-
-      if (!query) {
-        return base;
-      } // 'b=1&c=2&a=5'
-
-
-      return base + '?' + query // [ 'b=1', 'c=2', 'a=5' ]
-      .split('&') // [ [ 'b, '1' ], [ 'c', '2' ], [ 'a', '5' ] ]
-      .map(function (entry) {
-        return entry.split('=');
-      }) // [ [ 'a', '5' ], [ 'b, '1' ], [ 'c', '2' ] ]
-      .sort(function (a, b) {
-        return a[0].localeCompare(b[0]);
-      }) // [ 'a=5', 'b=1', 'c=2' ]
-      .map(function (pair) {
-        return pair.join('=');
-      }) // 'a=5&b=1&c=2'
-      .join('&');
-    }
-
     var _options$parse = options.parse,
         parse = _options$parse === void 0 ? true : _options$parse;
 
@@ -346,26 +294,31 @@ var createPreloadingMiddleware = function createPreloadingMiddleware(preloadedDa
       var method = options.method || 'GET';
       var path = getStablePath(options.path);
 
-      if (parse && 'GET' === method && preloadedData[path]) {
-        return Promise.resolve(preloadedData[path].body);
-      } else if ('OPTIONS' === method && preloadedData[method][path]) {
-        return Promise.resolve(preloadedData[method][path]);
+      if (parse && 'GET' === method && cache[path]) {
+        return Promise.resolve(cache[path].body);
+      } else if ('OPTIONS' === method && cache[method] && cache[method][path]) {
+        return Promise.resolve(cache[method][path]);
       }
     }
 
     return next(options);
   };
-};
+}
 
 /* harmony default export */ var preloading = (createPreloadingMiddleware);
 
+// EXTERNAL MODULE: external {"this":"regeneratorRuntime"}
+var external_this_regeneratorRuntime_ = __webpack_require__(23);
+var external_this_regeneratorRuntime_default = /*#__PURE__*/__webpack_require__.n(external_this_regeneratorRuntime_);
+
 // EXTERNAL MODULE: ./node_modules/@babel/runtime/helpers/esm/asyncToGenerator.js
-var asyncToGenerator = __webpack_require__(38);
+var asyncToGenerator = __webpack_require__(44);
 
 // EXTERNAL MODULE: external {"this":["wp","url"]}
-var external_this_wp_url_ = __webpack_require__(24);
+var external_this_wp_url_ = __webpack_require__(25);
 
 // CONCATENATED MODULE: ./node_modules/@wordpress/api-fetch/build-module/middlewares/fetch-all-middleware.js
+
 
 
 
@@ -387,7 +340,7 @@ var fetch_all_middleware_modifyQuery = function modifyQuery(_ref, queryArgs) {
 }; // Duplicates parsing functionality from apiFetch.
 
 
-var fetch_all_middleware_parseResponse = function parseResponse(response) {
+var parseResponse = function parseResponse(response) {
   return response.json ? response.json() : Promise.reject(response);
 };
 
@@ -423,9 +376,9 @@ var fetchAllMiddleware =
 function () {
   var _ref2 = Object(asyncToGenerator["a" /* default */])(
   /*#__PURE__*/
-  regeneratorRuntime.mark(function _callee(options, next) {
+  external_this_regeneratorRuntime_default.a.mark(function _callee(options, next) {
     var response, results, nextPage, mergedResults, nextResponse, nextResults;
-    return regeneratorRuntime.wrap(function _callee$(_context) {
+    return external_this_regeneratorRuntime_default.a.wrap(function _callee$(_context) {
       while (1) {
         switch (_context.prev = _context.next) {
           case 0:
@@ -456,7 +409,7 @@ function () {
           case 6:
             response = _context.sent;
             _context.next = 9;
-            return fetch_all_middleware_parseResponse(response);
+            return parseResponse(response);
 
           case 9:
             results = _context.sent;
@@ -500,7 +453,7 @@ function () {
           case 19:
             nextResponse = _context.sent;
             _context.next = 22;
-            return fetch_all_middleware_parseResponse(nextResponse);
+            return parseResponse(nextResponse);
 
           case 22:
             nextResults = _context.sent;
@@ -517,7 +470,7 @@ function () {
             return _context.stop();
         }
       }
-    }, _callee, this);
+    }, _callee);
   }));
 
   return function fetchAllMiddleware(_x, _x2) {
@@ -602,6 +555,159 @@ function userLocaleMiddleware(options, next) {
 
 /* harmony default export */ var user_locale = (userLocaleMiddleware);
 
+// CONCATENATED MODULE: ./node_modules/@wordpress/api-fetch/build-module/utils/response.js
+/**
+ * WordPress dependencies
+ */
+
+/**
+ * Parses the apiFetch response.
+ *
+ * @param {Response} response
+ * @param {boolean}  shouldParseResponse
+ *
+ * @return {Promise} Parsed response
+ */
+
+var response_parseResponse = function parseResponse(response) {
+  var shouldParseResponse = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : true;
+
+  if (shouldParseResponse) {
+    if (response.status === 204) {
+      return null;
+    }
+
+    return response.json ? response.json() : Promise.reject(response);
+  }
+
+  return response;
+};
+
+var response_parseJsonAndNormalizeError = function parseJsonAndNormalizeError(response) {
+  var invalidJsonError = {
+    code: 'invalid_json',
+    message: Object(external_this_wp_i18n_["__"])('The response is not a valid JSON response.')
+  };
+
+  if (!response || !response.json) {
+    throw invalidJsonError;
+  }
+
+  return response.json().catch(function () {
+    throw invalidJsonError;
+  });
+};
+/**
+ * Parses the apiFetch response properly and normalize response errors.
+ *
+ * @param {Response} response
+ * @param {boolean}  shouldParseResponse
+ *
+ * @return {Promise} Parsed response.
+ */
+
+
+var parseResponseAndNormalizeError = function parseResponseAndNormalizeError(response) {
+  var shouldParseResponse = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : true;
+  return Promise.resolve(response_parseResponse(response, shouldParseResponse)).catch(function (res) {
+    return parseAndThrowError(res, shouldParseResponse);
+  });
+};
+function parseAndThrowError(response) {
+  var shouldParseResponse = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : true;
+
+  if (!shouldParseResponse) {
+    throw response;
+  }
+
+  return response_parseJsonAndNormalizeError(response).then(function (error) {
+    var unknownError = {
+      code: 'unknown_error',
+      message: Object(external_this_wp_i18n_["__"])('An unknown error occurred.')
+    };
+    throw error || unknownError;
+  });
+}
+
+// CONCATENATED MODULE: ./node_modules/@wordpress/api-fetch/build-module/middlewares/media-upload.js
+
+
+/**
+ * WordPress dependencies
+ */
+
+/**
+ * Internal dependencies
+ */
+
+
+/**
+ * Middleware handling media upload failures and retries.
+ *
+ * @param {Object}   options Fetch options.
+ * @param {Function} next    [description]
+ *
+ * @return {*} The evaluated result of the remaining middleware chain.
+ */
+
+function mediaUploadMiddleware(options, next) {
+  var isMediaUploadRequest = options.path && options.path.indexOf('/wp/v2/media') !== -1 || options.url && options.url.indexOf('/wp/v2/media') !== -1;
+
+  if (!isMediaUploadRequest) {
+    return next(options, next);
+  }
+
+  var retries = 0;
+  var maxRetries = 5;
+
+  var postProcess = function postProcess(attachmentId) {
+    retries++;
+    return next({
+      path: "/wp/v2/media/".concat(attachmentId, "/post-process"),
+      method: 'POST',
+      data: {
+        action: 'create-image-subsizes'
+      },
+      parse: false
+    }).catch(function () {
+      if (retries < maxRetries) {
+        return postProcess(attachmentId);
+      }
+
+      next({
+        path: "/wp/v2/media/".concat(attachmentId, "?force=true"),
+        method: 'DELETE'
+      });
+      return Promise.reject();
+    });
+  };
+
+  return next(Object(objectSpread["a" /* default */])({}, options, {
+    parse: false
+  })).catch(function (response) {
+    var attachmentId = response.headers.get('x-wp-upload-attachment-id');
+
+    if (response.status >= 500 && response.status < 600 && attachmentId) {
+      return postProcess(attachmentId).catch(function () {
+        if (options.parse !== false) {
+          return Promise.reject({
+            code: 'post_process',
+            message: Object(external_this_wp_i18n_["__"])('Media upload failed. If this is a photo or a large image, please scale it down and try again.')
+          });
+        }
+
+        return Promise.reject(response);
+      });
+    }
+
+    return parseAndThrowError(response, options.parse);
+  }).then(function (response) {
+    return parseResponseAndNormalizeError(response, options.parse);
+  });
+}
+
+/* harmony default export */ var media_upload = (mediaUploadMiddleware);
+
 // CONCATENATED MODULE: ./node_modules/@wordpress/api-fetch/build-module/index.js
 
 
@@ -613,6 +719,8 @@ function userLocaleMiddleware(options, next) {
 /**
  * Internal dependencies
  */
+
+
 
 
 
@@ -645,106 +753,139 @@ var DEFAULT_HEADERS = {
 var DEFAULT_OPTIONS = {
   credentials: 'include'
 };
-var middlewares = [];
+var middlewares = [user_locale, namespace_endpoint, http_v1, fetch_all_middleware];
 
 function registerMiddleware(middleware) {
-  middlewares.push(middleware);
+  middlewares.unshift(middleware);
+}
+
+var checkStatus = function checkStatus(response) {
+  if (response.status >= 200 && response.status < 300) {
+    return response;
+  }
+
+  throw response;
+};
+
+var build_module_defaultFetchHandler = function defaultFetchHandler(nextOptions) {
+  var url = nextOptions.url,
+      path = nextOptions.path,
+      data = nextOptions.data,
+      _nextOptions$parse = nextOptions.parse,
+      parse = _nextOptions$parse === void 0 ? true : _nextOptions$parse,
+      remainingOptions = Object(objectWithoutProperties["a" /* default */])(nextOptions, ["url", "path", "data", "parse"]);
+
+  var body = nextOptions.body,
+      headers = nextOptions.headers; // Merge explicitly-provided headers with default values.
+
+  headers = Object(objectSpread["a" /* default */])({}, DEFAULT_HEADERS, headers); // The `data` property is a shorthand for sending a JSON body.
+
+  if (data) {
+    body = JSON.stringify(data);
+    headers['Content-Type'] = 'application/json';
+  }
+
+  var responsePromise = window.fetch(url || path, Object(objectSpread["a" /* default */])({}, DEFAULT_OPTIONS, remainingOptions, {
+    body: body,
+    headers: headers
+  }));
+  return responsePromise // Return early if fetch errors. If fetch error, there is most likely no
+  // network connection. Unfortunately fetch just throws a TypeError and
+  // the message might depend on the browser.
+  .then(function (value) {
+    return Promise.resolve(value).then(checkStatus).catch(function (response) {
+      return parseAndThrowError(response, parse);
+    }).then(function (response) {
+      return parseResponseAndNormalizeError(response, parse);
+    });
+  }, function () {
+    throw {
+      code: 'fetch_error',
+      message: Object(external_this_wp_i18n_["__"])('You are probably offline.')
+    };
+  });
+};
+
+var fetchHandler = build_module_defaultFetchHandler;
+/**
+ * Defines a custom fetch handler for making the requests that will override
+ * the default one using window.fetch
+ *
+ * @param {Function} newFetchHandler The new fetch handler
+ */
+
+function setFetchHandler(newFetchHandler) {
+  fetchHandler = newFetchHandler;
 }
 
 function apiFetch(options) {
-  var raw = function raw(nextOptions) {
-    var url = nextOptions.url,
-        path = nextOptions.path,
-        data = nextOptions.data,
-        _nextOptions$parse = nextOptions.parse,
-        parse = _nextOptions$parse === void 0 ? true : _nextOptions$parse,
-        remainingOptions = Object(objectWithoutProperties["a" /* default */])(nextOptions, ["url", "path", "data", "parse"]);
+  var steps = [].concat(middlewares, [fetchHandler]);
 
-    var body = nextOptions.body,
-        headers = nextOptions.headers; // Merge explicitly-provided headers with default values.
+  var createRunStep = function createRunStep(index) {
+    return function (workingOptions) {
+      var step = steps[index];
 
-    headers = Object(objectSpread["a" /* default */])({}, DEFAULT_HEADERS, headers); // The `data` property is a shorthand for sending a JSON body.
-
-    if (data) {
-      body = JSON.stringify(data);
-      headers['Content-Type'] = 'application/json';
-    }
-
-    var responsePromise = window.fetch(url || path, Object(objectSpread["a" /* default */])({}, DEFAULT_OPTIONS, remainingOptions, {
-      body: body,
-      headers: headers
-    }));
-
-    var checkStatus = function checkStatus(response) {
-      if (response.status >= 200 && response.status < 300) {
-        return response;
+      if (index === steps.length - 1) {
+        return step(workingOptions);
       }
 
-      throw response;
+      var next = createRunStep(index + 1);
+      return step(workingOptions, next);
     };
+  };
 
-    var parseResponse = function parseResponse(response) {
-      if (parse) {
-        if (response.status === 204) {
-          return null;
-        }
+  return new Promise(function (resolve, reject) {
+    createRunStep(0)(options).then(resolve).catch(function (error) {
+      if (error.code !== 'rest_cookie_invalid_nonce') {
+        return reject(error);
+      } // If the nonce is invalid, refresh it and try again.
 
-        return response.json ? response.json() : Promise.reject(response);
-      }
 
-      return response;
-    };
-
-    return responsePromise.then(checkStatus).then(parseResponse).catch(function (response) {
-      if (!parse) {
-        throw response;
-      }
-
-      var invalidJsonError = {
-        code: 'invalid_json',
-        message: Object(external_this_wp_i18n_["__"])('The response is not a valid JSON response.')
-      };
-
-      if (!response || !response.json) {
-        throw invalidJsonError;
-      }
-
-      return response.json().catch(function () {
-        throw invalidJsonError;
-      }).then(function (error) {
-        var unknownError = {
-          code: 'unknown_error',
-          message: Object(external_this_wp_i18n_["__"])('An unknown error occurred.')
-        };
-        throw error || unknownError;
-      });
+      window.fetch(apiFetch.nonceEndpoint).then(checkStatus).then(function (data) {
+        return data.text();
+      }).then(function (text) {
+        apiFetch.nonceMiddleware.nonce = text;
+        apiFetch(options).then(resolve).catch(reject);
+      }).catch(reject);
     });
-  };
-
-  var steps = [raw, fetch_all_middleware, http_v1, namespace_endpoint, user_locale].concat(middlewares).reverse();
-
-  var runMiddleware = function runMiddleware(index) {
-    return function (nextOptions) {
-      var nextMiddleware = steps[index];
-      var next = runMiddleware(index + 1);
-      return nextMiddleware(nextOptions, next);
-    };
-  };
-
-  return runMiddleware(0)(options);
+  });
 }
 
 apiFetch.use = registerMiddleware;
+apiFetch.setFetchHandler = setFetchHandler;
 apiFetch.createNonceMiddleware = middlewares_nonce;
 apiFetch.createPreloadingMiddleware = preloading;
 apiFetch.createRootURLMiddleware = root_url;
 apiFetch.fetchAllMiddleware = fetch_all_middleware;
+apiFetch.mediaUploadMiddleware = media_upload;
 /* harmony default export */ var build_module = __webpack_exports__["default"] = (apiFetch);
 
 
 /***/ }),
 
-/***/ 38:
+/***/ 40:
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "a", function() { return _objectWithoutPropertiesLoose; });
+function _objectWithoutPropertiesLoose(source, excluded) {
+  if (source == null) return {};
+  var target = {};
+  var sourceKeys = Object.keys(source);
+  var key, i;
+
+  for (i = 0; i < sourceKeys.length; i++) {
+    key = sourceKeys[i];
+    if (excluded.indexOf(key) >= 0) continue;
+    target[key] = source[key];
+  }
+
+  return target;
+}
+
+/***/ }),
+
+/***/ 44:
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -787,16 +928,16 @@ function _asyncToGenerator(fn) {
 
 /***/ }),
 
-/***/ 8:
+/***/ 6:
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "a", function() { return _objectSpread; });
-/* harmony import */ var _defineProperty__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(15);
+/* harmony import */ var _defineProperty__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(9);
 
 function _objectSpread(target) {
   for (var i = 1; i < arguments.length; i++) {
-    var source = arguments[i] != null ? arguments[i] : {};
+    var source = arguments[i] != null ? Object(arguments[i]) : {};
     var ownKeys = Object.keys(source);
 
     if (typeof Object.getOwnPropertySymbols === 'function') {
@@ -811,6 +952,28 @@ function _objectSpread(target) {
   }
 
   return target;
+}
+
+/***/ }),
+
+/***/ 9:
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "a", function() { return _defineProperty; });
+function _defineProperty(obj, key, value) {
+  if (key in obj) {
+    Object.defineProperty(obj, key, {
+      value: value,
+      enumerable: true,
+      configurable: true,
+      writable: true
+    });
+  } else {
+    obj[key] = value;
+  }
+
+  return obj;
 }
 
 /***/ })

@@ -144,7 +144,6 @@
 
 		events: {
 			'input #widgets-search': 'search',
-			'keyup #widgets-search': 'search',
 			'focus .widget-tpl' : 'focus',
 			'click .widget-tpl' : '_submit',
 			'keypress .widget-tpl' : '_submit',
@@ -192,9 +191,10 @@
 				}
 			} );
 
-			// Clear the search results and trigger a `keyup` event to fire a new search.
+			// Clear the search results and trigger a new search.
 			this.$clearResults.on( 'click', function() {
-				self.$search.val( '' ).focus().trigger( 'keyup' );
+				self.$search.val( '' ).focus();
+				self.collection.doSearch( '' );
 			} );
 
 			// Close the panel if the URL in the preview changes
@@ -204,7 +204,7 @@
 		/**
 		 * Performs a search and handles selected widget.
 		 */
-		search: function( event ) {
+		search: _.debounce( function( event ) {
 			var firstVisible;
 
 			this.collection.doSearch( event.target.value );
@@ -246,7 +246,7 @@
 			} else {
 				this.$el.removeClass( 'no-widgets-found' );
 			}
-		},
+		}, 500 ),
 
 		/**
 		 * Updates the count of the available widgets that have the `search_matched` attribute.
@@ -258,7 +258,7 @@
 		/**
 		 * Sends a message to the aria-live region to announce how many search results.
 		 */
-		announceSearchMatches: _.debounce( function() {
+		announceSearchMatches: function() {
 			var message = l10n.widgetsFound.replace( '%d', this.searchMatchesCount ) ;
 
 			if ( ! this.searchMatchesCount ) {
@@ -266,7 +266,7 @@
 			}
 
 			wp.a11y.speak( message );
-		}, 500 ),
+		},
 
 		/**
 		 * Changes visibility of available widgets.
@@ -709,8 +709,7 @@
 			} );
 
 			$closeBtn = this.container.find( '.widget-control-close' );
-			$closeBtn.on( 'click', function( e ) {
-				e.preventDefault();
+			$closeBtn.on( 'click', function() {
 				self.collapse();
 				self.container.find( '.widget-top .widget-action:first' ).focus(); // keyboard accessibility
 			} );
@@ -988,9 +987,7 @@
 
 			// Configure remove button
 			$removeBtn = this.container.find( '.widget-control-remove' );
-			$removeBtn.on( 'click', function( e ) {
-				e.preventDefault();
-
+			$removeBtn.on( 'click', function() {
 				// Find an adjacent element to add focus to when this widget goes away
 				var $adjacentFocusTarget;
 				if ( self.container.next().is( '.customize-control-widget_form' ) ) {
@@ -1042,7 +1039,7 @@
 		 * over when copying sanitized values over to the form loaded.
 		 *
 		 * @param {jQuery} container element in which to look for inputs
-		 * @returns {jQuery} inputs
+		 * @return {jQuery} inputs
 		 * @private
 		 */
 		_getInputs: function( container ) {
@@ -1054,7 +1051,7 @@
 		 * This string can be used to compare whether or not the form has all of the same fields.
 		 *
 		 * @param {jQuery} inputs
-		 * @returns {string}
+		 * @return {string}
 		 * @private
 		 */
 		_getInputsSignature: function( inputs ) {
@@ -1077,7 +1074,7 @@
 		 * Get the state for an input depending on its type.
 		 *
 		 * @param {jQuery|Element} input
-		 * @returns {string|boolean|array|*}
+		 * @return {string|boolean|array|*}
 		 * @private
 		 */
 		_getInputState: function( input ) {
@@ -1343,7 +1340,7 @@
 		 *
 		 * @param {Boolean} expanded
 		 * @param {Object} [params]
-		 * @returns {Boolean} false if state already applied
+		 * @return {Boolean} False if state already applied.
 		 */
 		_toggleExpanded: api.Section.prototype._toggleExpanded,
 
@@ -1351,7 +1348,7 @@
 		 * @since 4.1.0
 		 *
 		 * @param {Object} [params]
-		 * @returns {Boolean} false if already expanded
+		 * @return {Boolean} False if already expanded.
 		 */
 		expand: api.Section.prototype.expand,
 
@@ -1368,7 +1365,7 @@
 		 * @since 4.1.0
 		 *
 		 * @param {Object} [params]
-		 * @returns {Boolean} false if already collapsed
+		 * @return {Boolean} False if already collapsed.
 		 */
 		collapse: api.Section.prototype.collapse,
 
@@ -1498,7 +1495,7 @@
 		/**
 		 * Get the position (index) of the widget in the containing sidebar
 		 *
-		 * @returns {Number}
+		 * @return {Number}
 		 */
 		getWidgetSidebarPosition: function() {
 			var sidebarWidgetIds, position;
@@ -1655,7 +1652,7 @@
 				/**
 				 * Update the notice.
 				 *
-				 * @returns {void}
+				 * @return {void}
 				 */
 				updateNotice = function() {
 					var activeSectionCount = getActiveSectionCount(), someRenderedMessage, nonRenderedAreaCount, registeredAreaCount;
@@ -1711,7 +1708,7 @@
 		 *
 		 * @since 4.4.0
 		 *
-		 * @returns {boolean}
+		 * @return {boolean}
 		 */
 		isContextuallyActive: function() {
 			var panel = this;
@@ -2063,8 +2060,8 @@
 		},
 
 		/**
-		 * @param {string} widgetId or an id_base for adding a previously non-existing widget
-		 * @returns {object|false} widget_form control instance, or false on error
+		 * @param {string} widgetId or an id_base for adding a previously non-existing widget.
+		 * @return {object|false} widget_form control instance, or false on error.
 		 */
 		addWidget: function( widgetId ) {
 			var self = this, controlHtml, $widget, controlType = 'widget_form', controlContainer, controlConstructor,
@@ -2333,7 +2330,7 @@
 
 	/**
 	 * @param {String} widgetId
-	 * @returns {Object}
+	 * @return {Object}
 	 */
 	function parseWidgetId( widgetId ) {
 		var matches, parsed = {
@@ -2355,7 +2352,7 @@
 
 	/**
 	 * @param {String} widgetId
-	 * @returns {String} settingId
+	 * @return {String} settingId
 	 */
 	function widgetIdToSettingId( widgetId ) {
 		var parsed = parseWidgetId( widgetId ), settingId;

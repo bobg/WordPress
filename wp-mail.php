@@ -26,7 +26,7 @@ if ( 'mail.example.com' === $mailserver_url || empty( $mailserver_url ) ) {
  *
  * @since 2.9.0
  */
-do_action( 'wp-mail.php' );
+do_action( 'wp-mail.php' ); // phpcs:ignore WordPress.NamingConventions.ValidHookName.UseUnderscores
 
 /** Get the POP3 class with which to access the mailbox. */
 require_once( ABSPATH . WPINC . '/class-pop3.php' );
@@ -101,7 +101,7 @@ for ( $i = 1; $i <= $count; $i++ ) {
 				$content_transfer_encoding = explode( ';', $content_transfer_encoding );
 				$content_transfer_encoding = $content_transfer_encoding[0];
 			}
-			if ( ( $content_type == 'multipart/alternative' ) && ( false !== strpos( $line, 'boundary="' ) ) && ( '' == $boundary ) ) {
+			if ( ( 'multipart/alternative' === $content_type ) && ( false !== strpos( $line, 'boundary="' ) ) && ( '' === $boundary ) ) {
 				$boundary = trim( $line );
 				$boundary = explode( '"', $boundary );
 				$boundary = $boundary[1];
@@ -131,7 +131,7 @@ for ( $i = 1; $i <= $count; $i++ ) {
 				}
 				$author = sanitize_email( $author );
 				if ( is_email( $author ) ) {
-					/* translators: Post author email address */
+					/* translators: %s: Post author email address. */
 					echo '<p>' . sprintf( __( 'Author is %s' ), $author ) . '</p>';
 					$userdata = get_user_by( 'email', $author );
 					if ( ! empty( $userdata ) ) {
@@ -142,11 +142,11 @@ for ( $i = 1; $i <= $count; $i++ ) {
 			}
 
 			if ( preg_match( '/Date: /i', $line ) ) { // of the form '20 Mar 2002 20:32:37 +0100'
-				$ddate         = str_replace( 'Date: ', '', trim( $line ) );
-				$ddate         = preg_replace( '!\s*\(.+\)\s*$!', '', $ddate ); // remove parenthesised timezone string if it exists, as this confuses strtotime
-				$ddate_U       = strtotime( $ddate );
-				$post_date     = gmdate( 'Y-m-d H:i:s', $ddate_U + $time_difference );
-				$post_date_gmt = gmdate( 'Y-m-d H:i:s', $ddate_U );
+				$ddate           = str_replace( 'Date: ', '', trim( $line ) );
+				$ddate           = preg_replace( '!\s*\(.+\)\s*$!', '', $ddate ); // remove parenthesised timezone string if it exists, as this confuses strtotime
+				$ddate_timestamp = strtotime( $ddate );
+				$post_date       = gmdate( 'Y-m-d H:i:s', $ddate_timestamp + $time_difference );
+				$post_date_gmt   = gmdate( 'Y-m-d H:i:s', $ddate_timestamp );
 			}
 		}
 	}
@@ -162,7 +162,7 @@ for ( $i = 1; $i <= $count; $i++ ) {
 
 	$subject = trim( $subject );
 
-	if ( $content_type == 'multipart/alternative' ) {
+	if ( 'multipart/alternative' === $content_type ) {
 		$content = explode( '--' . $boundary, $content );
 		$content = $content[2];
 
@@ -212,7 +212,7 @@ for ( $i = 1; $i <= $count; $i++ ) {
 
 	$post_title = xmlrpc_getposttitle( $content );
 
-	if ( $post_title == '' ) {
+	if ( '' === $post_title ) {
 		$post_title = $subject;
 	}
 
@@ -245,7 +245,7 @@ for ( $i = 1; $i <= $count; $i++ ) {
 
 	if ( ! $pop3->delete( $i ) ) {
 		echo '<p>' . sprintf(
-			/* translators: %s: POP3 error */
+			/* translators: %s: POP3 error. */
 			__( 'Oops: %s' ),
 			esc_html( $pop3->ERROR )
 		) . '</p>';
@@ -253,7 +253,7 @@ for ( $i = 1; $i <= $count; $i++ ) {
 		exit;
 	} else {
 		echo '<p>' . sprintf(
-			/* translators: %s: the message ID */
+			/* translators: %s: The message ID. */
 			__( 'Mission complete. Message %s deleted.' ),
 			'<strong>' . $i . '</strong>'
 		) . '</p>';

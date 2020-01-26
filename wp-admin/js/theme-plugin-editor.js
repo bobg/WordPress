@@ -36,7 +36,7 @@ wp.themePluginEditor = (function( $ ) {
 	 * @param {jQuery}         form - Form element.
 	 * @param {object}         settings - Settings.
 	 * @param {object|boolean} settings.codeEditor - Code editor settings (or `false` if syntax highlighting is disabled).
-	 * @returns {void}
+	 * @return {void}
 	 */
 	component.init = function init( form, settings ) {
 
@@ -53,6 +53,8 @@ wp.themePluginEditor = (function( $ ) {
 		component.textarea = component.form.find( '#newcontent' );
 		component.textarea.on( 'change', component.onChange );
 		component.warning = $( '.file-editor-warning' );
+		component.docsLookUpButton = component.form.find( '#docs-lookup' );
+		component.docsLookUpList = component.form.find( '#docs-list' );
 
 		if ( component.warning.length > 0 ) {
 			component.showWarning();
@@ -77,13 +79,22 @@ wp.themePluginEditor = (function( $ ) {
 			}
 			return undefined;
 		} );
+
+		component.docsLookUpList.on( 'change', function() {
+			var option = $( this ).val();
+			if ( '' === option ) {
+				component.docsLookUpButton.prop( 'disabled', true );
+			} else {
+				component.docsLookUpButton.prop( 'disabled', false );
+			}
+		} );
 	};
 
 	/**
 	 * Set up and display the warning modal.
 	 *
 	 * @since 4.9.0
-	 * @returns {void}
+	 * @return {void}
 	 */
 	component.showWarning = function() {
 		// Get the text within the modal.
@@ -114,7 +125,7 @@ wp.themePluginEditor = (function( $ ) {
 	 *
 	 * @since 4.9.0
 	 * @param {object} event jQuery event object.
-	 * @returns {void}
+	 * @return {void}
 	 */
 	component.constrainTabbing = function( event ) {
 		var firstTabbable, lastTabbable;
@@ -139,7 +150,7 @@ wp.themePluginEditor = (function( $ ) {
 	 * Dismiss the warning modal.
 	 *
 	 * @since 4.9.0
-	 * @returns {void}
+	 * @return {void}
 	 */
 	component.dismissWarning = function() {
 
@@ -157,7 +168,7 @@ wp.themePluginEditor = (function( $ ) {
 	 * Callback for when a change happens.
 	 *
 	 * @since 4.9.0
-	 * @returns {void}
+	 * @return {void}
 	 */
 	component.onChange = function() {
 		component.dirty = true;
@@ -169,7 +180,7 @@ wp.themePluginEditor = (function( $ ) {
 	 *
 	 * @since 4.9.0
 	 * @param {jQuery.Event} event - Event.
-	 * @returns {void}
+	 * @return {void}
 	 */
 	component.submit = function( event ) {
 		var data = {}, request;
@@ -256,7 +267,7 @@ wp.themePluginEditor = (function( $ ) {
 	 * @param {string}   notice.message - Message.
 	 * @param {boolean}  [notice.dismissible=false] - Dismissible.
 	 * @param {Function} [notice.onDismiss] - Callback for when a user dismisses the notice.
-	 * @returns {jQuery} Notice element.
+	 * @return {jQuery} Notice element.
 	 */
 	component.addNotice = function( notice ) {
 		var noticeElement;
@@ -292,7 +303,7 @@ wp.themePluginEditor = (function( $ ) {
 	 * @since 4.9.0
 	 *
 	 * @param {string} code - Notice code.
-	 * @returns {boolean} Whether a notice was removed.
+	 * @return {boolean} Whether a notice was removed.
 	 */
 	component.removeNotice = function( code ) {
 		if ( component.noticeElements[ code ] ) {
@@ -309,7 +320,7 @@ wp.themePluginEditor = (function( $ ) {
 	 * Initialize code editor.
 	 *
 	 * @since 4.9.0
-	 * @returns {void}
+	 * @return {void}
 	 */
 	component.initCodeEditor = function initCodeEditor() {
 		var codeEditorSettings, editor;
@@ -321,7 +332,7 @@ wp.themePluginEditor = (function( $ ) {
 		 *
 		 * @since 4.9.0
 		 *
-		 * @returns {void}
+		 * @return {void}
 		 */
 		codeEditorSettings.onTabPrevious = function() {
 			$( '#templateside' ).find( ':tabbable' ).last().focus();
@@ -332,7 +343,7 @@ wp.themePluginEditor = (function( $ ) {
 		 *
 		 * @since 4.9.0
 		 *
-		 * @returns {void}
+		 * @return {void}
 		 */
 		codeEditorSettings.onTabNext = function() {
 			$( '#template' ).find( ':tabbable:not(.CodeMirror-code)' ).first().focus();
@@ -344,7 +355,7 @@ wp.themePluginEditor = (function( $ ) {
 		 * @since 4.9.0
 		 *
 		 * @param {Array} errors - List of linting errors.
-		 * @returns {void}
+		 * @return {void}
 		 */
 		codeEditorSettings.onChangeLintingErrors = function( errors ) {
 			component.lintErrors = errors;
@@ -361,7 +372,7 @@ wp.themePluginEditor = (function( $ ) {
 		 * @since 4.9.0
 		 *
 		 * @param {Array} errorAnnotations - Error annotations.
-		 * @returns {void}
+		 * @return {void}
 		 */
 		codeEditorSettings.onUpdateErrorNotice = function onUpdateErrorNotice( errorAnnotations ) {
 			var message, noticeElement;
@@ -413,7 +424,7 @@ wp.themePluginEditor = (function( $ ) {
 	 * Initialization of the file browser's folder states.
 	 *
 	 * @since 4.9.0
-	 * @returns {void}
+	 * @return {void}
 	 */
 	component.initFileBrowser = function initFileBrowser() {
 

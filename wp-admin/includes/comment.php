@@ -104,7 +104,8 @@ function edit_comment() {
  * @return WP_Comment|false Comment if found. False on failure.
  */
 function get_comment_to_edit( $id ) {
-	if ( ! $comment = get_comment( $id ) ) {
+	$comment = get_comment( $id );
+	if ( ! $comment ) {
 		return false;
 	}
 
@@ -164,7 +165,7 @@ function get_pending_comments_num( $post_id ) {
 
 	$pending_keyed = array();
 
-	// Default to zero pending for all posts in request
+	// Default to zero pending for all posts in request.
 	foreach ( $post_id_array as $id ) {
 		$pending_keyed[ $id ] = 0;
 	}
